@@ -1,5 +1,45 @@
 ---
-title: "MEAN_TP"
+title: "MEAN_TP / MiM 2022 - UTDT"
 output: html_notebook
 ---
+
+# Cargamos los datos
+
+```{r}
+# Cargo datos
+directorio_datos <- '/Users/javierlassaortiz/Documents/MiM+A/Materias/22-M1_MEAN/MEAN_TP/data_TP_MEAN.txt'
+datos <- read.csv(directorio_datos, sep = ';')
+
+# Transformamos atributo fecha (char) a formato fecha posta
+datos$date <-  strptime(datos$date, format = '%d/%m/%Y')
+
+# Trasformo todos los atributos (menos askingprice, temp y precipitation) a categorias)
+datos$buyerid <- as.factor(datos$buyerid)
+datos$itemsold <- as.factor(datos$itemsold)
+datos$message <- as.factor(datos$message)
+datos$desktop <- as.factor(datos$desktop)
+datos$post <- as.factor(datos$post)
+
+```
+
+## Algunos atributos parecen tener problemas
+
+El atributo itemid se supone que es un número único por cada producto, pero al
+transformarlo a variable categórica R nos indica que solo tiene 5 niveles, es decir
+que solo habría 5 productos en total ... la base de datos parece que no se subió 
+correctamente
+
+```{r}
+# Veamos cuantos numero distintos hay en el atributo itemid
+length(unique(datos$itemid))
+
+# Transformamos itemid a categórica y queda en evidencia que solo tiene 5 categoría
+datos$itemid <- as.factor(datos$itemid)
+
+summary(datos$itemid)
+```
+
+
+
+
 
