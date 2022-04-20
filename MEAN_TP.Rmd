@@ -11,15 +11,15 @@ output: html_notebook
 # PRIMER PASO! Ingresamos el directorio donde están los datos en la consola
 directorio_datos <- readline("Directorio datos: ")
 directorio_datos <- paste0(directorio_datos, '/ebay_data.txt')
+
+# Cargo datos
+datos <- read.csv(directorio_datos, sep = ';')
 ```
 
 
 
-
+# Acondicionamos los datos
 ```{r}
-# Cargo datos
-datos <- read.csv(directorio_datos, sep = ';')
-
 # Transformamos atributo fecha (char) a formato fecha posta
 datos$date <-  strptime(datos$date, format = '%d/%m/%Y')
 
