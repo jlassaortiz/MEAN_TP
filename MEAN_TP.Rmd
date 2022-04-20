@@ -3,11 +3,21 @@ title: "MEAN_TP / MiM 2022 - UTDT"
 output: html_notebook
 ---
 
-# Cargamos los datos
+# Ejercicio 1 
+
+## Cargamos los datos
+
+```{r}
+# PRIMER PASO! Ingresamos el directorio donde están los datos en la consola
+directorio_datos <- readline("Directorio datos: ")
+directorio_datos <- paste0(directorio_datos, '/ebay_data.txt')
+```
+
+
+
 
 ```{r}
 # Cargo datos
-directorio_datos <- '/Users/javierlassaortiz/Documents/MiM+A/Materias/22-M1_MEAN/MEAN_TP/data_TP_MEAN.txt'
 datos <- read.csv(directorio_datos, sep = ';')
 
 # Transformamos atributo fecha (char) a formato fecha posta
@@ -19,7 +29,7 @@ datos$itemsold <- as.factor(datos$itemsold)
 datos$message <- as.factor(datos$message)
 datos$desktop <- as.factor(datos$desktop)
 datos$post <- as.factor(datos$post)
-
+datos$category <- as.factor(datos$category)
 ```
 
 ## Algunos atributos parecen tener problemas
@@ -38,6 +48,65 @@ datos$itemid <- as.factor(datos$itemid)
 
 summary(datos$itemid)
 ```
+
+
+
+# Ejercicio 2
+
+
+
+
+
+
+
+
+# Ejercicio 3
+
+
+
+
+
+
+
+
+# Ejercicio 4
+
+
+
+
+
+
+
+
+# Ejercicio 5
+
+
+
+
+
+
+
+# Ejercicio 6
+
+
+
+
+
+
+
+
+# Ejercicio 7
+
+
+
+
+
+
+
+# Ejercicio 8
+
+
+
 
 
 
