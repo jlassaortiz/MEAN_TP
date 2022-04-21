@@ -53,7 +53,7 @@ summary(datos$itemid)
 
 # Ejercicio 2
 
-
+cambio en eje 2 
 
 
 
