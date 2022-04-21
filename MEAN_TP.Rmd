@@ -18,6 +18,12 @@ datos <- read.csv(directorio_datos, sep = ';')
 
 
 
+```{r}
+# comentario dentro de codigo 
+```
+
+
+
 # Acondicionamos los datos
 ```{r}
 # Transformamos atributo fecha (char) a formato fecha posta
