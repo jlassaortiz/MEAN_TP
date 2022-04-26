@@ -12,8 +12,10 @@ output: html_notebook
 directorio_datos <- readline("Directorio datos: ")
 directorio_datos <- paste0(directorio_datos, '/ebay_data.txt')
 
+
 # Cargo datos
 datos <- read.csv(directorio_datos, sep = ';')
+
 ```
 
 
@@ -58,11 +60,37 @@ summary(datos$itemid)
 
 
 # Ejercicio 2
+Para cada uno de los cuatro conjuntos armo los conjuntos debidos a los parámetros y construyo los intervalos de confianza
 
-cambio en eje 2 
+```{r}
+datos <- read.csv(directorio_datos, sep = ';')
 
+data_Desktop_antes = datos[(datos$desktop == 1 & datos$post == 0),]
+IntervaloDesktopAntes <- binom.test(x=sum(data_Desktop_antes$itemsold), n=nrow(data_Desktop_antes), conf.level=0.95)$conf.int
 
+data_movile_antes = datos[(datos$desktop==0 & datos$post==0),]
+IntervaloMovileAntes<- binom.test(x=sum(data_movile_antes$itemsold), n=nrow(data_movile_antes), conf.level=0.95)$conf.int
 
+data_Desktop_despues = datos[(datos$desktop == 1 & datos$post == 1),]
+IntervaloDesktopDespues <- binom.test(x=sum(data_Desktop_despues$itemsold), n=nrow(data_Desktop_despues), conf.level=0.95)$conf.int
+
+data_movile_despues = datos[(datos$desktop==0 & datos$post==1),]
+IntervaloMovileDespues<- binom.test(x=sum(data_movile_despues$itemsold), n=nrow(data_movile_despues), conf.level=0.95)$conf.int
+```
+
+Ahora quiero ver los intervalos de confianza
+```{r}
+IntervaloDesktopAntes
+IntervaloDesktopDespues
+IntervaloMovileAntes
+IntervaloMovileDespues
+```
+
+Al comparar los intervalos de confianza de la proporción de ventas en la versión Desktop antes y después del 23 de mayo, se puede observar que no hay solapamiento de los intervalos. Esto indica evidencia estadística significativa de que la proporción de ventas en la versión desktop cambió de manera relevante a partir del 23 de mayo.
+
+De la misma manera, al comparar los intervalos de confianza de la proporción de ventas en la versión Movile antes y después del 23 de mayo, se observa que no hay solapamiento de intervalos, otorgando nuevamente evidencia estadística significativa del cambio notable que se dio en la proporción de ventas a partir del 23 de mayo.
+
+También se puede observar que el update incluido en la plataforma que permite la comunicación por mensajes entre vendedores y compradores, tuvo un impacto mucho mayor en la proporción de las ventas en la versión Desktop. Se llega a esta conclusión porque si bien, ambas versiones de la plataforma tuvieron cambios significativos en su proporción de ventas, los intervalos de confianza de la versión desktop antes y después del 23 de mayo se encuentran mucho más separados que aquellos de la versión movile antes y despues del 23. Esta gran distancia entre los intervalos en la versión desktop sugiere evidencia de un fuerte impacto en la proporción de ventas.
 
 
 
@@ -82,7 +110,7 @@ cambio en eje 2
 
 # Ejercicio 4
 ```{r}
-#Este tambi�n le toca a Vir 
+#Este tambi?n le toca a Vir 
 ```
 
 
