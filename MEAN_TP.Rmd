@@ -19,13 +19,6 @@ datos <- read.csv(directorio_datos, sep = ';')
 ```
 
 
-
-```{r}
-# comentario dentro de codigo 
-```
-
-
-
 # Acondicionamos los datos
 ```{r}
 # Transformamos atributo fecha (char) a formato fecha posta
@@ -38,6 +31,8 @@ datos$message <- as.factor(datos$message)
 datos$desktop <- as.factor(datos$desktop)
 datos$post <- as.factor(datos$post)
 datos$category <- as.factor(datos$category)
+
+summary(datos)
 ```
 
 ## Algunos atributos parecen tener problemas
@@ -123,6 +118,10 @@ También se puede observar que el update incluido en la plataforma que permite l
 
 # Ejercicio 5
 
+```{r}
+regresion <- lm(data = datos, itemsold ~ desktop + post + desktop*post)
+summary(regresion)
+```
 
 
 
@@ -131,6 +130,10 @@ También se puede observar que el update incluido en la plataforma que permite l
 
 # Ejercicio 6
 
+```{r}
+regresion_2 <- lm(data = datos, itemsold ~ desktop + post + condition + desktop*post)
+summary(regresion_2)
+```
 
 
 
