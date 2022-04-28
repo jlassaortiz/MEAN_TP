@@ -142,8 +142,17 @@ summary(regresion_2)
 
 
 # Ejercicio 7
-Ejercicio Seba
 
+```{r}
+regresion_3 <- lm(data = datos, itemsold ~ desktop + post + desktop*post + temp + precipitation)
+summary(regresion_3)
+```
+
+
+```{r}
+regresion_4 <- lm(data = datos, itemsold ~ desktop + post + condition + desktop*post + temp + precipitation)
+summary(regresion_4)
+```
 
 
 
