@@ -16,24 +16,59 @@ directorio_datos <- paste0(directorio_datos, '/ebay_data.txt')
 # Cargo datos
 datos <- read.csv(directorio_datos, sep = ';')
 
-```
-
-
-# Acondicionamos los datos
-```{r}
 # Transformamos atributo fecha (char) a formato fecha posta
 datos$date <-  strptime(datos$date, format = '%d/%m/%Y')
 
-# Trasformo todos los atributos (menos askingprice, temp y precipitation) a categorias)
-datos$buyerid <- as.factor(datos$buyerid)
-datos$itemsold <- as.factor(datos$itemsold)
-datos$message <- as.factor(datos$message)
-datos$desktop <- as.factor(datos$desktop)
-datos$post <- as.factor(datos$post)
-datos$category <- as.factor(datos$category)
-
+# Vemos un breve resumen de los datos
 summary(datos)
 ```
+
+
+# Hacemos gráficos para ver con mas detalle nuestros datos y que de esta forma nos ayuden a encontrar outliers o errores en la base 
+```{r}
+library(ggplot2)
+ggplot(data = datos, aes(date)) +
+  geom_bar()
+```
+```{r}
+ggplot(data = datos, aes(as.factor(itemid)))+
+  geom_bar()
+
+ggplot(data = datos, aes(as.factor(buyerid)))+
+  geom_bar()
+
+ggplot(data = datos, aes(as.factor(itemsold)))+
+  geom_bar()
+
+ggplot(data = datos, aes(as.factor(message)))+
+  geom_bar()
+
+ggplot(data = datos, aes(as.factor(desktop)))+
+  geom_bar()
+
+ggplot(data = datos, aes(as.factor(post)))+
+  geom_bar()
+
+ggplot(data = datos, aes(as.factor(category)))+
+  geom_bar()
+
+ggplot(data = datos, aes(as.factor(condition)))+
+  geom_bar()
+
+ggplot(data = datos, aes(askingprice))+
+   geom_histogram()
+
+ggplot(data = datos, aes(as.factor(holiday)))+
+  geom_bar()
+
+ggplot(data = datos, aes(temp))+
+  geom_histogram()
+
+ggplot(data = datos, aes(precipitation))+
+  geom_histogram()
+
+```
+
 
 ## Algunos atributos parecen tener problemas
 
@@ -119,7 +154,7 @@ También se puede observar que el update incluido en la plataforma que permite l
 # Ejercicio 5
 
 ```{r}
-regresion <- lm(data = datos, itemsold ~ desktop + post + desktop*post)
+regresion <- lm(data = datos, itemsold ~ desktop + post + desktop * post)
 summary(regresion)
 ```
 
