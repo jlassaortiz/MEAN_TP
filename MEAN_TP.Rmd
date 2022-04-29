@@ -3,6 +3,12 @@ title: "MEAN_TP / MiM 2022 - UTDT"
 output: html_notebook
 ---
 
+Intregrantes del equipo:
+Javier Lassa Ortiz
+Felicitas Lanusse
+Sebastian Calandroni
+Virginia Muruaga
+
 # Ejercicio 1 
 
 ## Cargamos los datos
@@ -190,28 +196,60 @@ También se puede observar que el update incluido en la plataforma que permite l
 
 
 # Ejercicio 3
+
+Evalúen empíricamente si la proporción de ventas de productos nuevos
+en la versión Desktop después del 23 de mayo de 2016 es superior al 50%.
+
+TEST DE HIP?TESIS PARA LA PROPORCIÓN 
+1. PLANTEAMOS HIP?TESIS NULA Y ALTERNATIVA
+Hipótesis nula: ??<=0,5
+Hipótesis alternativa: ??>0,5
+
+2. Calculamos la proporción muestral de productos nuevos vendidos en la versión A después del cambio, sobre el total de productos nuevos  en la versión A,después del cambio
 ```{r}
-#Este le toca a Vir
+ventas_nuevos_Desktop_post =datos[(datos$desktop == 1 & datos$itemsold==1 & datos$condition==1 & datos$post == 1),]
+ventas_nuevos_post=datos[(datos$desktop==1 & datos$condition==1 & datos$post == 1),]
+
+
+p_vtas_nuevos_desk_post<-(sum(ventas_nuevos_Desktop_post$itemsold)/nrow(ventas_nuevos_post))
+p_vtas_nuevos_desk_post
 ```
 
+En la muestra, la proporción de productos nuevos vendidos en la versión A después del cambio implementado, sobre el total de productos nuevos ofertados en la versión A,  después del cambio implementado es de aproximadamente el 48%
 
+3. CALCULO EL ESTADÍSTICO
+```{r}
+n <- nrow(ventas_nuevos_post)
+phat <- 0.4878028
+zstat <- (phat-0.5)/sqrt(0.5*(1-0.5)/n); zstat
+```
 
+4. Calculo el valor critico
+```{r}
+zcrit <- qnorm(0.95); zcrit
+```
 
-
+5.Calculo el p-value
+```{r}
+pvalor <- 1-pnorm(zstat, lower.tail=TRUE) ; pvalor
+```
+El estadístico muestral es menor al valor crítico, por lo tanto no estamos en condiciones de rechazar la hipótesis nula. 
+Asimismo, el P-VALUE es mayor al nivel de significación, lo cual refuerza la decisión de no rechazar la hipótesis nula,
+Con un nivel de significación del 5% no estamos en condiciones de rechazar la hipótesis nula, por lo que afirmamos que no existe evidencia de que la proporción de ventas de productos nuevos en la versión Desktop después del 23 de mayo de 2016 es superior al 50%.
 
 
 
 # Ejercicio 4
+
 ```{r}
-#Este tambi?n le toca a Vir 
+mustar <- seq(from = 0.50001, to=1, by=0.001) #genero una secuencia de valor mustar para los cuales la H0 ser?a falsa, es decir, la proporcion es mayor a 0,5.
+pcrit <- qnorm(0.05)*sqrt(0.5*(1-0.5)/n)+0.5
+potencia <-1- pnorm((pcrit-mustar)/sqrt(0.5*(1-0.5)/n))
+beta <- 1-potencia
+plot(mustar,potencia,type = "l", xlab= "p*", ylab= "potencia", lwd=1, xlim = c(0.5, 0.51))
 ```
 
-
-
-
-
-
-
+En la curva de potencia se observa que a medida que la proporción se aleja del valor planteado en la Hipótesis nula, p0=0.5, la potencia del test crece, es decir, la probabilidad de Rechazar la hipótesis nula cuando esta es falsa (decisión correcta) es mayor. 
 
 
 # Ejercicio 5
