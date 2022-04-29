@@ -229,7 +229,6 @@ Si sobre las regresiones de los puntos (5) y (6) agregamos como variables de con
 
 
 # Ejercicio 8
-Ejercicio Seba
 
 ```{r}
 GroupA<-sample(datos, 38, replace=TRUE)
