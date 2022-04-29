@@ -64,7 +64,7 @@ ggplot(data = datos, aes(as.factor(condition)))+
   theme_classic()
 ```
 
-Estos graficos nos informan que las variables descriptas no tienen serios desbalanceos, todas estarían igualmente representadas. El caso es distinto para los atributos que graficamos a continuación.
+Estos gráficos nos informan que las variables descriptas no tienen serios desbalanceos, todas estarían igualmente representadas. El caso es distinto para los atributos que graficámos a continuación.
 
 ```{r}
 ggplot(data = datos, aes(askingprice))+
@@ -94,11 +94,11 @@ ggplot(data = datos, aes(as.factor(message)))+
   theme_classic()
 ```
 
-Finalmente, las variables `buyerid` e `itemid` no lucen como esperamos. Resulta extraño que la cantidad de ofertas de compradores luzca escalonada, es decir que falten varlores intermedios (compradores que ofertaron 700 veces por ejemplo). 
+Finalmente, las variables `buyerid` e `itemid` no lucen como esperamos. Resulta extraño que la cantidad de ofertas de compradores luzca escalonada, es decir que falten valores intermedios (compradores que ofertaron 700 veces por ejemplo). 
 
 Para el id de los items resulta extraño que solo haya 5 items en toda la muestra. 
 
-Consideramos que estos atributos de la base de datos no son correctos y que sus valores puden deberse a un error en el armado de la misma. 
+Consideramos que estos atributos de la base de datos no son correctos y que sus valores pueden deberse a un error en el armado de la misma. 
 
 
 ```{r}
@@ -112,7 +112,35 @@ ggplot(data = datos, aes(as.factor(buyerid)))+
   labs(x = 'id del comprador')+
   theme_classic()
 ```
+## Composición de las publicaciones según categoría
+Vemos que las categorías están bastante distribuidas, todas las categorías tienen alrededor del 20% de las publicaciones (este es un comportamiento que resulta contra-intuitivo, ya que generalmente por ejemplo la categoría libros tiene mucho mas items que la categoría de joyería y relojes)
 
+```{r}
+table(datos$category)
+prop.table(table(datos$category))
+```
+
+Vamos a hacer la misma comparación pero con el porcentaje de publicaciones que se concretaron en ventas (tomando únicamente items vendidos)
+
+```{r}
+solo_ventas = datos[(datos$itemsold == 1),]
+table(solo_ventas$category[])
+prop.table(table(solo_ventas$category))
+```
+
+Ya empezamos a ver diferencias, claramente por más que las publicaciones estén balanceadas, hay algunas categorías en las cuales se realizan muchas más ventas que en otras categorías. Vamos a hacer un último análisis incorporando la variable del precio para obtener las ventas en pesos:
+
+```{r}
+solo_ventas = datos[(datos$itemsold == 1),]
+
+library(dplyr)
+sales_by_cat <- solo_ventas %>% 
+                        group_by(category) %>% 
+                        summarise(totalSales = sum(askingprice))
+sales_by_cat$percentage <- sales_by_cat$totalSales/sum(sales_by_cat$totalSales)
+sales_by_cat
+```
+Podemos observar que si bien el mayor porcentaje de las unidades vendidas corresponde a los libros (alrededor de un 30%), si evaluamos en terminos de facturacion corresponde a un porcentaje muy bajo (3.7% aproximadamente), mientras que un 53% corresponde a la categoría de electrónica (un 12% de las publicaciones con venta concretada), y un 26% corresponde a joyería y relojes (17% de las publicaciones de venta).
 
 # Ejercicio 2
 Para cada uno de los cuatro conjuntos armo los conjuntos debidos a los parámetros y construyo los intervalos de confianza
@@ -157,7 +185,7 @@ Al comparar los intervalos de confianza de la proporción de ventas en la versi�
 
 De la misma manera, al comparar los intervalos de confianza de la proporción de ventas en la versión Movile antes y después del 23 de mayo, se observa que no hay solapamiento de intervalos, otorgando nuevamente evidencia estadística significativa del cambio notable que se dio en la proporción de ventas a partir del 23 de mayo.
 
-También se puede observar que el update incluido en la plataforma que permite la comunicación por mensajes entre vendedores y compradores, tuvo un impacto mucho mayor en la proporción de las ventas en la versión Desktop. Se llega a esta conclusión porque si bien, ambas versiones de la plataforma tuvieron cambios significativos en su proporción de ventas, los intervalos de confianza de la versión desktop antes y después del 23 de mayo se encuentran mucho más separados que aquellos de la versión movile antes y despues del 23. Esta gran distancia entre los intervalos en la versión desktop sugiere evidencia de un fuerte impacto en la proporción de ventas.
+También se puede observar que el update incluido en la plataforma que permite la comunicación por mensajes entre vendedores y compradores, tuvo un impacto mucho mayor en la proporción de las ventas en la versión Desktop. Se llega a esta conclusión porque si bien, ambas versiones de la plataforma tuvieron cambios significativos en su proporción de ventas, los intervalos de confianza de la versión desktop antes y después del 23 de mayo se encuentran mucho más separados que aquellos de la versión movile antes y después del 23. Esta gran distancia entre los intervalos en la versión desktop sugiere evidencia de un fuerte impacto en la proporción de ventas.
 
 
 
@@ -193,22 +221,52 @@ regresion <- lm(data = datos, itemsold ~ desktop + post + desktop * post)
 summary(regresion)
 ```
 
+Según los estimadores de este modelo podemos decir que la probabilidad que se realice una compra para un artículo visto desde la versión desktop y posteado después del 23/5/2016 es de 
+
+$\beta_0 + \beta_{desktop}*1 + \beta_{post}*1 + \beta_{desktop*post}*1*1 = 0.45 +  0.02 + 0.02 + 0.04 = 0.53$
+
+La probabilidad que se realice una compra para un artículo visto desde la versión móvil y posteado después del 23/5/2016 es:
+ 
+$\beta_0 + \beta_{desktop}*0 + \beta_{post}*1 + \beta_{desktop*post}*1*0 = 0.45 +  0+ 0.02 + 0 = 0.47$
+ 
+La probalidad que se realice una compra para un artículo visto desde la versión móvil y posteado antes del 23/5/2016 es:
+ 
+$\beta_0 + \beta_{desktop}*0 + \beta_{post}*0 + \beta_{desktop*post}*0*0 = 0.45 +  0 + 0 + 0 = 0.45$
+
+La probabilidad que se realice una compra para un artículo visto desde la versión desktop y posteado antes del 23/5/2016 es:
+
+$\beta_0 + \beta_{desktop}*1 + \beta_{post}*0 + \beta_{desktop*post}*0*1 = 0.45 +  0.02 + 0 + 0 = 0.47$
 
 
+Para evaluar el efeto de la comunicación efectiva hago otro modelo a partir de este sumando la variable `messsage`
 
+```{r}
+regresion_2a <- lm(data = datos, itemsold ~ desktop + post + message + desktop*post)
+summary(regresion_2a)
+```
+
+El hecho que se hayan enviado efectivamente un mensaje aumenta la probabilidad de la venta en 17 puntos porcentuales.
+
+Notar que en este nuevo modelo, al sumar `messsage`,  la variable `desktop` pierde significancia estadística. 
 
 
 # Ejercicio 6
 
 ```{r}
-regresion_2 <- lm(data = datos, itemsold ~ desktop + post + condition + desktop*post)
-summary(regresion_2)
+regresion_2b <- lm(data = datos, itemsold ~ desktop + post + message + condition  + desktop*post)
+summary(regresion_2b)
 ```
 
+Los resultados son muy similares. Los estimadores casi no cambian. El efecto del la condición del producto sobre la probabilidad de de venta es baja. El hecho que un producto sea nuevo disminuye la probabilidad de compra en 5 puntos porcentuales. 
 
+Este resultado nos llama la atención y nos preguntamos si la condición no será colineal con el precio. Hacemos otro modelo agregando el precio. 
 
+```{r}
+regresion_2c <- lm(data = datos, itemsold ~ desktop + post + message + condition  + askingprice + desktop*post)
+summary(regresion_2c)
+```
 
-
+Al agregar la variable `askingprice` los efectos marginales de las variables son muy similares a los del `modelo_2b`. Si hay colinealidad entre las variables `askingprice` y `condition`, la misma es leve.
 
 
 # Ejercicio 7
@@ -224,7 +282,7 @@ regresion_4 <- lm(data = datos, itemsold ~ desktop + post + condition + desktop*
 summary(regresion_4)
 ```
 
-Si sobre las regresiones de los puntos (5) y (6) agregamos como variables de control las variables climaticas, las estimaciones cambian porque estan correlacionadas. Pero es una correlacion espuria dado que esta relacion estadistica no deberia existir. Ni la temperatura ni las precipitaciones deberian tener relacion estadistica con las variables incluidas en este modelo.
+Si sobre las regresiones de los puntos (5) y (6) agregamos como variables de control las variables climáticas, las estimaciones cambian porque están correlacionadas. Pero es una correlación espuria dado que esta relación estadástica no debería existir. Ni la temperatura ni las precipitaciones deberían tener relación estadística con las variables incluidas en este modelo.
 
 
 
