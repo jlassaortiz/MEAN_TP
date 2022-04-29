@@ -243,7 +243,7 @@ Data_Desktop_Antes_A = GroupA[(GroupA$desktop == 1 & GroupA$post == 0),]
 IntervaloDesktopAntes_A <- binom.test(x=sum(Data_Desktop_Antes_A$itemsold), n=nrow(Data_Desktop_Antes_A), conf.level=0.95)$conf.int
 
 Data_Mobile_Antes_A = GroupA[(GroupA$desktop==0 & GroupA$post==0),]
-IntervaloMovileAntes_A <- binom.test(x=sum(Data_Mobile_Antes_A$itemsold), n=nrow(Data_Mobile_Antes_A), conf.level=0.95)$conf.int
+IntervaloMobileAntes_A <- binom.test(x=sum(Data_Mobile_Antes_A$itemsold), n=nrow(Data_Mobile_Antes_A), conf.level=0.95)$conf.int
 
 Data_Desktop_Despues_A = GroupA[(GroupA$desktop == 1 & GroupA$post == 1),]
 IntervaloDesktopDespues_A <- binom.test(x=sum(Data_Desktop_Despues_A$itemsold), n=nrow(Data_Desktop_Despues_A), conf.level=0.95)$conf.int
@@ -257,7 +257,7 @@ Data_Desktop_Antes_B = GroupB[(GroupB$desktop == 1 & GroupB$post == 0),]
 IntervaloDesktopAntes_B <- binom.test(x=sum(Data_Desktop_Antes_B$itemsold), n=nrow(Data_Desktop_Antes_B), conf.level=0.95)$conf.int
 
 Data_Mobile_Antes_B = GroupB[(GroupB$desktop==0 & GroupB$post==0),]
-IntervaloMovileAntes_B <- binom.test(x=sum(Data_Mobile_Antes_B$itemsold), n=nrow(Data_Mobile_Antes_B), conf.level=0.95)$conf.int
+IntervaloMobileAntes_B <- binom.test(x=sum(Data_Mobile_Antes_B$itemsold), n=nrow(Data_Mobile_Antes_B), conf.level=0.95)$conf.int
 
 Data_Desktop_Despues_B = GroupB[(GroupB$desktop == 1 & GroupB$post == 1),]
 IntervaloDesktopDespues_B <- binom.test(x=sum(Data_Desktop_Despues_B$itemsold), n=nrow(Data_Desktop_Despues_B), conf.level=0.95)$conf.int
@@ -271,14 +271,14 @@ Revisamos resultados obtenidos.
 ```{r}
 IntervaloDesktopAntes_A
 IntervaloDesktopDespues_A
-IntervaloMovileAntes_A
-IntervaloMovileDespues_A
+IntervaloMobileAntes_A
+IntervaloMobileDespues_A
 ```
 
 ```{r}
 IntervaloDesktopAntes_B
 IntervaloDesktopDespues_B
-IntervaloMovileAntes_B
-IntervaloMovileDespues_B
+IntervaloMobileAntes_B
+IntervaloMobileDespues_B
 ```
 
