@@ -189,7 +189,7 @@ regresion_4 <- lm(data = datos, itemsold ~ desktop + post + condition + desktop*
 summary(regresion_4)
 ```
 
-
+# Si sobre las regresiones de los puntos (5) y (6) agregamos como variables de control las variables climaticas, las estimaciones cambian porque estan correlacionadas. Pero es una correlacion espuria dado que esta relacion estadistica no deberia existir. Ni la temperatura ni las precipitaciones deberian tener relacion estadistica con las variables incluidas en este modelo.
 
 
 
