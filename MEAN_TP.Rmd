@@ -17,7 +17,7 @@ directorio_datos <- paste0(directorio_datos, '/ebay_data.txt')
 datos <- read.csv(directorio_datos, sep = ';')
 
 # Transformamos atributo fecha (char) a formato fecha posta
-datos$date <-  strptime(datos$date, format = '%d/%m/%Y')
+datos$date <-  as.Date(datos$date, format = '%d/%m/%Y')
 
 # Vemos un breve resumen de los datos
 summary(datos)
@@ -30,7 +30,7 @@ Hacemos gráficos para ver con mas detalle nuestros datos y que de esta forma no
 ```{r}
 library(ggplot2)
 
-ggplot(data = datos, aes(as.Date(date), fill = as.factor(post))) +
+ggplot(data = datos, aes(date, fill = as.factor(post))) +
    geom_histogram(alpha=0.5, position="identity", binwidth = 1)+
   labs(x = 'fechas') +
   scale_fill_discrete(name = "posteriores a 23/5/2016",labels = c('0', '1'))+
@@ -110,7 +110,7 @@ ggplot(data = datos, aes(as.factor(itemid)))+
 ggplot(data = datos, aes(as.factor(buyerid)))+
   geom_bar()+
   labs(x = 'id del comprador')+
-  theme_classic()+
+  theme_classic()
 ```
 
 
