@@ -23,78 +23,101 @@ datos$date <-  strptime(datos$date, format = '%d/%m/%Y')
 summary(datos)
 ```
 
+# Gráficos descriptivos
 
-# Hacemos gráficos para ver con mas detalle nuestros datos y que de esta forma nos ayuden a encontrar outliers o errores en la base 
+Hacemos gráficos para ver con mas detalle nuestros datos y que de esta forma nos ayuden a encontrar outliers o errores en la base 
+
 ```{r}
 library(ggplot2)
-ggplot(data = datos, aes(date)) +
-  geom_bar()
-```
-```{r}
-ggplot(data = datos, aes(as.factor(itemid)))+
-  geom_bar()
 
-ggplot(data = datos, aes(as.factor(buyerid)))+
-  geom_bar()
+ggplot(data = datos, aes(as.Date(date), fill = as.factor(post))) +
+   geom_histogram(alpha=0.5, position="identity", binwidth = 1)+
+  labs(x = 'fechas') +
+  scale_fill_discrete(name = "posteriores a 23/5/2016",labels = c('0', '1'))+
+  theme_classic()
+
+ggplot(data = datos, aes(as.factor(post), fill = as.factor(post)))+
+  geom_bar(alpha = 0.5)+
+  labs(x = 'posteado antes o después del 23/5/2016')+
+  theme_classic() +
+  theme(legend.position =  'none')
 
 ggplot(data = datos, aes(as.factor(itemsold)))+
-  geom_bar()
-
-ggplot(data = datos, aes(as.factor(message)))+
-  geom_bar()
+  geom_bar()+
+  labs(x = 'venta (no se vendió / se vendió)') +
+  theme_classic()
 
 ggplot(data = datos, aes(as.factor(desktop)))+
-  geom_bar()
-
-ggplot(data = datos, aes(as.factor(post)))+
-  geom_bar()
-
+  geom_bar()+
+  labs(x = 'comprador usó versión desktop (sino mobil)')+
+  theme_classic()
+  
 ggplot(data = datos, aes(as.factor(category)))+
-  geom_bar()
+  geom_bar(alpha = 0.5)+
+  labs(x = 'categoría del producto')+
+  theme_classic()+
+  theme(legend.position =  'none')
 
 ggplot(data = datos, aes(as.factor(condition)))+
-  geom_bar()
-
-ggplot(data = datos, aes(askingprice))+
-   geom_histogram()
-
-ggplot(data = datos, aes(as.factor(holiday)))+
-  geom_bar()
-
-ggplot(data = datos, aes(temp))+
-  geom_histogram()
-
-ggplot(data = datos, aes(precipitation))+
-  geom_histogram()
-
+  geom_bar()+
+  labs(x = 'condición (usado o nuevo)')+
+  theme_classic()
 ```
 
-
-## Algunos atributos parecen tener problemas
-
-El atributo itemid se supone que es un número único por cada producto, pero al
-transformarlo a variable categórica R nos indica que solo tiene 5 niveles, es decir
-que solo habría 5 productos en total ... la base de datos parece que no se subió 
-correctamente
+Estos graficos nos informan que las variables descriptas no tienen serios desbalanceos, todas estarían igualmente representadas. El caso es distinto para los atributos que graficamos a continuación.
 
 ```{r}
-# Veamos cuantos numero distintos hay en el atributo itemid
-length(unique(datos$itemid))
+ggplot(data = datos, aes(askingprice))+
+  geom_histogram(binwidth = 50) +
+  xlim(NA, 2000) +
+  labs(x = 'precio ofrecido')+
+  theme_classic()
 
-# Transformamos itemid a categórica y queda en evidencia que solo tiene 5 categoría
-datos$itemid <- as.factor(datos$itemid)
+ggplot(data = datos, aes(precipitation))+
+  geom_histogram()+
+  labs(x = 'días de lluvias')+
+  theme_classic()
 
-summary(datos$itemid)
+ggplot(data = datos, aes(temp))+
+  geom_histogram()+
+  labs(x = 'temperatura')+
+  theme_classic()
+
+ggplot(data = datos, aes(as.factor(holiday)))+
+  geom_bar()+
+  labs(x = 'época de vacaciones')+
+  theme_classic()
+
+ggplot(data = datos, aes(as.factor(message)))+
+  geom_bar()+
+  labs(x = 'Comprador envió un mensaje') +
+  theme_classic()
 ```
 
+Finalmente, las variables `buyerid` e `itemid` no lucen como esperamos. Resulta extraño que la cantidad de ofertas de compradores luzca escalonada, es decir que falten varlores intermedios (compradores que ofertaron 700 veces por ejemplo). 
+
+Para el id de los items resulta extraño que solo haya 5 items en toda la muestra. 
+
+Consideramos que estos atributos de la base de datos no son correctos y que sus valores puden deberse a un error en el armado de la misma. 
+
+
+```{r}
+ggplot(data = datos, aes(as.factor(itemid)))+
+  geom_bar()+
+  labs(x = 'id del item')+
+  theme_classic()
+
+ggplot(data = datos, aes(as.factor(buyerid)))+
+  geom_bar()+
+  labs(x = 'id del comprador')+
+  theme_classic()+
+```
 
 
 # Ejercicio 2
 Para cada uno de los cuatro conjuntos armo los conjuntos debidos a los parámetros y construyo los intervalos de confianza
 
 ```{r}
-datos <- read.csv(directorio_datos, sep = ';')
-
 data_Desktop_antes = datos[(datos$desktop == 1 & datos$post == 0),]
 IntervaloDesktopAntes <- binom.test(x=sum(data_Desktop_antes$itemsold), n=nrow(data_Desktop_antes), conf.level=0.95)$conf.int
 
@@ -114,6 +137,20 @@ IntervaloDesktopAntes
 IntervaloDesktopDespues
 IntervaloMovileAntes
 IntervaloMovileDespues
+
+nombres <- c('Desktop Antes', 'Desktop Despues', 'Movile Antes', 'Moviles Despues')
+intervalo_up <- c(IntervaloDesktopAntes[1], IntervaloDesktopDespues[1], IntervaloMovileAntes[1], IntervaloMovileDespues[1])
+intervalo_down <- c(IntervaloDesktopAntes[2], IntervaloDesktopDespues[2], IntervaloMovileAntes[2], IntervaloMovileDespues[2])
+
+intervalos <- data.frame(nombres, intervalo_up, intervalo_down)
+
+ggplot(data = intervalos, aes(1, color = as.factor(nombres)))+
+  geom_errorbar(aes(ymin = intervalo_down, ymax = intervalo_up), size = 1.5)+
+  labs(color = "") +
+  theme_classic() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 ```
 
 Al comparar los intervalos de confianza de la proporción de ventas en la versión Desktop antes y después del 23 de mayo, se puede observar que no hay solapamiento de los intervalos. Esto indica evidencia estadística significativa de que la proporción de ventas en la versión desktop cambió de manera relevante a partir del 23 de mayo.
@@ -121,8 +158,6 @@ Al comparar los intervalos de confianza de la proporción de ventas en la versi�
 De la misma manera, al comparar los intervalos de confianza de la proporción de ventas en la versión Movile antes y después del 23 de mayo, se observa que no hay solapamiento de intervalos, otorgando nuevamente evidencia estadística significativa del cambio notable que se dio en la proporción de ventas a partir del 23 de mayo.
 
 También se puede observar que el update incluido en la plataforma que permite la comunicación por mensajes entre vendedores y compradores, tuvo un impacto mucho mayor en la proporción de las ventas en la versión Desktop. Se llega a esta conclusión porque si bien, ambas versiones de la plataforma tuvieron cambios significativos en su proporción de ventas, los intervalos de confianza de la versión desktop antes y después del 23 de mayo se encuentran mucho más separados que aquellos de la versión movile antes y despues del 23. Esta gran distancia entre los intervalos en la versión desktop sugiere evidencia de un fuerte impacto en la proporción de ventas.
-
-
 
 
 
